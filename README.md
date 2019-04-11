@@ -1,1 +1,2 @@
-# ci1322-lab1
+# Esteban de Jesus Rojas Solís
+# B66293
