@@ -15,4 +15,13 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <developers>
+    <developer>
+        <name> Esteban Rojas Solís</name>
+        <email> esteban201483@gmail.com</email>
+        <roles>
+            <role> Estudiante</role>
+        </roles>
+    </developer>
+  </developers>
 </project>
