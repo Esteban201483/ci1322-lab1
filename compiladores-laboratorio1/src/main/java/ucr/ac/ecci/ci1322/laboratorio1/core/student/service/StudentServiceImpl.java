@@ -7,7 +7,7 @@ public class StudentServiceImpl implements StudentService
 {
     private StudentDao dao;
 
-    StudentServiceImpl()
+    public StudentServiceImpl()
     {
 
     }

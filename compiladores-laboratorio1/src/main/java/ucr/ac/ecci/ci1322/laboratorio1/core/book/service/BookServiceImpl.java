@@ -7,7 +7,7 @@ public class BookServiceImpl implements BookService
 {
     private BookDao dao;
 
-    BookServiceImpl()
+    public BookServiceImpl()
     {
 
     }
