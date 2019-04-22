@@ -26,7 +26,7 @@ public class DataLoader
     /**
      * Este método se encarga de tomar una hoja de cálculo, comprueba que tenga una hoja llamada Book y
      * empieza a leer los datos de prueba. Asume que la primer fila de la hoja se usa para listar los atributos
-     * @param hoja
+     * @param hoja Hoja dentro de la hoja de cálculo que contiene las tuplas de libro. La primer tupla lista los atributos
      * @return Un valor entero que indica si la operación se realizo exitosamente.
      */
     public int cargarLibro(HSSFSheet hoja){
@@ -47,8 +47,7 @@ public class DataLoader
         Book nuevoLibro;
         servicioLibro = new BookServiceImpl();
 
-        while(fila != null)
-        {
+        while(fila.getCell(0).getStringCellValue() != "") {
             //Extrae cada celda de la fila para poder crear una nueva instancia de libro.
 
             codigo = fila.getCell(0).getStringCellValue();
@@ -59,6 +58,8 @@ public class DataLoader
             idioma = fila.getCell(5).getStringCellValue();
             detalles = fila.getCell(6).getStringCellValue();
             propietario = fila.getCell(7).getStringCellValue();
+
+
 
             nuevoLibro = new Book(codigo,nombre,autor,editorial,pais,idioma,detalles,propietario);
             servicioLibro.create(nuevoLibro);
@@ -76,7 +77,7 @@ public class DataLoader
     /**
      * Este método se encarga de tomar una hoja de cálculo, comprueba que tenga una hoja llamada Student y
      * empieza a leer los datos de prueba. Asume que la primer fila de la hoja se usa para listar los atributos
-     * @param hoja
+     * @param hoja Hoja dentro de la hoja de cálculo que contiene las tuplas de estudiante. La primer tupla lista los atributos
      * @return Un valor entero que indica si la operación se realizo exitosamente.
      */
     public int cargarEstudiante(HSSFSheet hoja){
@@ -91,12 +92,10 @@ public class DataLoader
         String telefono;
         String correo;
         String universidad;
-
         Student nuevoEstudiante;
         servicioEstudiante = new StudentServiceImpl();
 
-        while(fila != null)
-        {
+        while(fila.getCell(0).getStringCellValue() != "") {
             id = fila.getCell(0).getStringCellValue();
             nombre = fila.getCell(1).getStringCellValue();
             ciudad = fila.getCell(2).getStringCellValue();
@@ -111,9 +110,6 @@ public class DataLoader
             ++indice;
             fila = hoja.getRow(indice);
         }
-
-
-
         return resultado;
     }
 
@@ -128,7 +124,7 @@ public class DataLoader
 
         try {
 
-            entrada = new FileInputStream("../../resources/" + nombre);
+            entrada = new FileInputStream("./src/main/resources/" + nombre);
             POIFSFileSystem pfs = new POIFSFileSystem(entrada);
             HSSFWorkbook wb = new HSSFWorkbook(pfs);
 
@@ -136,16 +132,24 @@ public class DataLoader
             HSSFSheet hojaEstudiantes = wb.getSheetAt(1);
 
             cargarEstudiante(hojaEstudiantes);
-            cargarEstudiante(hojaLibros);
+            cargarLibro(hojaLibros);
 
         }
         finally{
             if(entrada != null)
                 entrada.close();
         }
-
-
     }
 
 
+public static void main(String args[]) throws IOException {
+        DataLoader loader = new DataLoader();
+
+        System.out.println("Cargando datos de prueba.");
+
+        loader.cargarHoja("Hoja 2.xls");
+
+        System.out.println("Carga de datos de prueba finalizada");
+    }
 }
+

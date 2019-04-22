@@ -1,27 +1,36 @@
-package ucr.ac.ecci.ci1322.laboratorio1.model;
+package model;
 
+
+import anotaciones.Entity;
+
+@Entity(name = "prueba")
+//@Table(name = "student")
 public class Student {
 
+  //  @Id
+ //   @Column(name = "id", length = 20)
+
     String id;
+
+  //  @Column(name = "nombre", length = 20)
     String nombre;
+
+ //   @Column(name = "ciudad", length = 20)
     String ciudad;
+
+ //   @Column(name = "telefono", length = 20)
     String telefono;
+
+ //   @Column(name = "correo", length = 20)
     String correo;
+
+ //   @Column(name = "universidad", length = 20)
     String universidad;
 
     public Student(){
 
     }
 
-    /**
-     *
-     * @param id Identificacion del estudiante.
-     * @param nombre Nombre del estudiante.
-     * @param ciudad Ciudad del estudiante.
-     * @param telefono Telefono del estudiante.
-     * @param correo Correo del estudiante.
-     * @param universidad Universidad del estudiante.
-     */
     public Student(String id, String nombre, String ciudad, String telefono, String correo, String universidad){
         this.id = id;
         this.nombre = nombre;
@@ -30,7 +39,6 @@ public class Student {
         this.correo = correo;
         this.universidad = universidad;
     }
-
 
     public String getId() {return id;}
     public String getNombre(){return nombre;}
