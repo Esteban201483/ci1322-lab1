@@ -3,8 +3,6 @@
  * el IMEC de la clase estudiante..
  * @author Esteban Rojas
  */
-
-
 package ucr.ac.ecci.ci1322.laboratorio1.core.student.dao;
 
 import org.apache.poi.sl.draw.geom.SqrtExpression;
@@ -52,9 +50,10 @@ public class JdbcStudentService implements StudentDao {
             if(conn != null)
             {
 
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("SELECT * from ESTUDIANTE WHERE ID = ?");
+                statement.setString(1,id);
 
-                ResultSet tupla = statement.executeQuery("SELECT * from Estudiante WHERE id = '" + id + "'");
+                ResultSet tupla = statement.executeQuery();
 
                 //Solo lee si la tupla no esta vacia
                 if (tupla.next()) {
@@ -85,11 +84,19 @@ public class JdbcStudentService implements StudentDao {
             Connection conn = abrirConexion();
 
             if(conn != null) {
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO ESTUDIANTE(ID,NOMBRE,CIUDAD,TELEFONO," +
+                        "CORREO,UNIVERSIDAD) VALUES (?,?,?,?,?,?)");
 
-                statement.executeUpdate("INSERT INTO ESTUDIANTE(id,nombre,ciudad,telefono,correo,universidad) VALUES " +
-                        "('" + entity.getId() + "','" + entity.getNombre() + "','" + entity.getCiudad() + "','" + entity.getTelefono() +
-                        "','" + entity.getCorreo() + "','" + entity.getUniversidad() + "')");
+                statement.setString(1,entity.getId());
+                statement.setString(2,entity.getNombre());
+                statement.setString(3,entity.getCiudad());
+                statement.setString(4,entity.getTelefono());
+                statement.setString(5,entity.getCorreo());
+                statement.setString(6,entity.getUniversidad());
+
+                if(statement.executeUpdate() > 0)
+                    System.out.println("Se ha agregado el estudiante");
+
 
                 conn.close();
                 id = entity.getId();
@@ -116,12 +123,19 @@ public class JdbcStudentService implements StudentDao {
 
             if(conn != null)
             {
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("UPDATE ESTUDIANTE SET NOMBRE = ?, CIUDAD = ?," +
+                        "CORREO = ?, UNIVERSIDAD = ? WHERE ID = ?");
 
-                statement.executeQuery("UPDATE student set nombre = '"+entity.getNombre()+"'" +
-                        "ciudad= '"+entity.getCiudad()+", correo = '"+entity.getCorreo()+"', universidad = '"+entity.getUniversidad()+"'" +
-                        "WHERE  id = '"+entity.getId()+"'  ");
 
+                statement.setString(1,entity.getNombre());
+                statement.setString(2,entity.getCiudad());
+                statement.setString(3,entity.getTelefono());
+                statement.setString(4,entity.getCorreo());
+                statement.setString(5,entity.getUniversidad());
+                statement.setString(6,entity.getId());
+
+
+                statement.execute();
                 conn.close();
             }
         }
@@ -142,8 +156,8 @@ public class JdbcStudentService implements StudentDao {
 
             if(conn != null)
             {
-                Statement statement = conn.createStatement();
-                statement.executeUpdate("DELETE FROM estudiante WHERE id = '"+entity.getId()+"'");
+                PreparedStatement statement = conn.prepareStatement("DELETE FROM ESTUDIANTE WHERE ID = ?");
+                statement.setString(1, entity.getId());
 
                 conn.close();
             }

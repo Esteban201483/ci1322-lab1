@@ -47,9 +47,10 @@ public class JdbcBookService implements BookDao {
             Connection conn = abrirConexion();
 
             if(conn != null) {
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("SELECT * from LIBRO WHERE CODIGO = ?");
+                statement.setString(1,id);
 
-                ResultSet tupla = statement.executeQuery("SELECT * from LIBRO WHERE CODIGO = '" + id + "'");
+                ResultSet tupla = statement.executeQuery();
 
                 //Solo lee si la tupla no esta vacia
                 if (tupla.next()) {
@@ -79,12 +80,24 @@ public class JdbcBookService implements BookDao {
             Connection conn = abrirConexion();
 
             if(conn != null) {
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("INSERT INTO LIBRO(CODIGO, NOMBRE," +
+                        "AUTOR,EDITOR,PAIS,LENGUAJE,DETALLES,PROPIETARIO) VALUES (?,?,?,?,?,?,?,?)");
 
-                statement.executeUpdate("INSERT INTO LIBRO(codigo,nombre,autor,editor,pais,lenguaje,detalles,propietario) VALUES " +
-                        "('" + entity.getCodigo() + "','" + entity.getNombre() + "','" + entity.getAutor() + "','" + entity.getEditorial() +
-                        "','" + entity.getPais() + "','" + entity.getIdioma() + "','" + entity.getDetalles() +
-                        "','" + entity.getPropietario() + "')");
+
+                statement.setString(1, entity.getCodigo());
+                statement.setString(2, entity.getNombre());
+                statement.setString(3, entity.getAutor());
+                statement.setString(4, entity.getEditorial());
+                statement.setString(5, entity.getPais());
+                statement.setString(6, entity.getIdioma());
+                statement.setString(7, entity.getDetalles());
+                statement.setString(8, entity.getPropietario());
+
+                if(statement.executeUpdate() > 0)
+                {
+                    System.out.println("Se ha agregado el libro.");
+                }
+
 
                 conn.close();
                 codigo = entity.getCodigo();
@@ -111,12 +124,19 @@ public class JdbcBookService implements BookDao {
 
             if(conn != null)
             {
-                Statement statement = conn.createStatement();
+                PreparedStatement statement = conn.prepareStatement("UPDATE LIBRO set nombre = ?, autor = ?," +
+                        "editor = ?, pais = ?, lenguaje = ?, detalles = ?, propietario = ? WHERE codigo = ?");
 
-                statement.executeUpdate("UPDATE libro set nombre = '"+entity.getNombre()+"', autor = '"+entity.getAutor()+"'" +
-                        ",editor = '"+entity.getEditorial()+", pais= '"+entity.getPais()+"', lenguaje= '"+entity.getIdioma()+"'" +
-                        ", detalles= '"+entity.getDetalles()+"', propietario = '"+entity.getPropietario()+"''" +
-                        "WHERE codigo = '"+entity.getCodigo()+"' ");
+
+                statement.setString(1, entity.getNombre());
+                statement.setString(2, entity.getAutor());
+                statement.setString(3, entity.getEditorial());
+                statement.setString(4, entity.getPais());
+                statement.setString(5, entity.getIdioma());
+                statement.setString(6, entity.getDetalles());
+                statement.setString(7, entity.getPropietario());
+                statement.setString(8, entity.getCodigo());
+                statement.execute();
 
                 conn.close();
             }
@@ -139,15 +159,17 @@ public class JdbcBookService implements BookDao {
 
             if(conn != null)
             {
-                Statement statement = conn.createStatement();
-                statement.executeUpdate("DELETE FROM libro WHERE codigo = '"+entity.getCodigo()+"'");
+                PreparedStatement statement = conn.prepareStatement("DELETE FROM libro WHERE codigo = ?");
+
+                statement.setString(1,entity.getCodigo());
+                statement.executeUpdate();
 
                 conn.close();
             }
         }
         catch(SQLException e)
         {
-
+            System.out.println("Error: No se pudo borrar el libro.");
         }
     }
 }
